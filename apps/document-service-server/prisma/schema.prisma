@@ -1,0 +1,39 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  email     String?
+  name      String?
+  documents Document[]
+}
+
+model Document {
+  id         String      @id @default(cuid())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  signatures Signature[]
+  file       Json?
+  employee   Employee?   @relation(fields: [employeeId], references: [id])
+  employeeId String?
+}
+
+model Signature {
+  id                   String    @id @default(cuid())
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  email                String?
+  signatureCoordinates Json?
+  signedOn             DateTime?
+  name                 String?
+  document             Document? @relation(fields: [documentId], references: [id])
+  documentId           String?
+}
