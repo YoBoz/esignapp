@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Client {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  name       String?
+  email      String?
+  contract   Contract? @relation(fields: [contractId], references: [id])
+  contractId String?
+}
+
+model Signature {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  signerEmail    String?
+  signedAt       DateTime?
+  signatureImage Json?
+  contract       Contract? @relation(fields: [contractId], references: [id])
+  contractId     String?
+}
+
+model Contract {
+  id         String              @id @default(cuid())
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  title      String?
+  content    String?
+  status     EnumContractStatus?
+  signatures Signature[]
+  clients    Client[]
+}
+
+enum EnumContractStatus {
+  Option1
+}
