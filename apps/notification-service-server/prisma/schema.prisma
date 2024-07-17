@@ -1,0 +1,19 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model EmailNotification {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sentAt         DateTime?
+  recipientEmail String?
+  subject        String?
+  message        String?
+  contract       String?
+}
